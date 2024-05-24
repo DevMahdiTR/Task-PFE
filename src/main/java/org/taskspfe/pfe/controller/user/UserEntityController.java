@@ -55,6 +55,16 @@ public class UserEntityController {
         return userEntityService.fetchAllClients();
     }
 
+    @PutMapping("/admin/enable/{userId}")
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> enableUser(@PathVariable("userId") final UUID userId) {
+        return userEntityService.enableUser(userId);
+    }
+
+    @PutMapping("/admin/disable/{userId}")
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> disableUser(@PathVariable("userId") final UUID userId) {
+        return userEntityService.disableUser(userId);
+    }
+
     @GetMapping("/all/technicians")
     public ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllTechnicians() {
         return userEntityService.fetchAllTechnicians();

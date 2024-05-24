@@ -18,7 +18,8 @@ public interface UserEntityService {
     public ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllAdmins();
     public ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllClients();
     public ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllTechnicians();
-
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> enableUser(final UUID userId);
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> disableUser(final UUID userId);
     public ResponseEntity<CustomResponseEntity<UserEntityDTO>> fetchUserById(final UUID userId);
     public ResponseEntity<CustomResponseList<UserEntityDTO>> fetchAllUsers(final long pageNumber);
     public ResponseEntity<CustomResponseEntity<UserEntityDTO>> fetchCurrentUser(final UserDetails userDetails);

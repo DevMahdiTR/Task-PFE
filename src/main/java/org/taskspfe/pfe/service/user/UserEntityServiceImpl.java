@@ -30,7 +30,6 @@ public class UserEntityServiceImpl implements UserEntityService {
         this.userEntityDTOMapper = userEntityDTOMapper;
     }
 
-
     @Override
     public ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllAdmins() {
         List<UserEntity> admins = userEntityRepository.fetchAllAdmins();
@@ -52,6 +51,24 @@ public class UserEntityServiceImpl implements UserEntityService {
         List<UserEntity> technicians = userEntityRepository.fetchAllTechnicians();
         List<UserEntityDTO> userEntityDTOList = technicians.stream().map(userEntityDTOMapper).toList();
         CustomResponseEntity<List<UserEntityDTO>> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK,userEntityDTOList);
+        return new ResponseEntity<>(customResponseEntity,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> enableUser(UUID userId) {
+        final UserEntity user = getUserEntityById(userId);
+        user.setEnabled(true);
+        final UserEntityDTO userEntityDto = userEntityDTOMapper.apply(user);
+        final CustomResponseEntity<UserEntityDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK,userEntityDto);
+        return new ResponseEntity<>(customResponseEntity,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> disableUser(UUID userId) {
+        final UserEntity user = getUserEntityById(userId);
+        user.setEnabled(false);
+        final UserEntityDTO userEntityDto = userEntityDTOMapper.apply(user);
+        final CustomResponseEntity<UserEntityDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK,userEntityDto);
         return new ResponseEntity<>(customResponseEntity,HttpStatus.OK);
     }
 
