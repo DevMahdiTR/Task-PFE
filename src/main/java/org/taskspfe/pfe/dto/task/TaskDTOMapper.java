@@ -18,8 +18,8 @@ public class TaskDTOMapper implements Function<Task,TaskDTO> {
                 task.getDescription(),
                 task.getStatus(),
                 task.getCreateAt(),
-                new UserEntityDTOMapper().apply(task.getCreatedBy()),
-                new UserEntityDTOMapper().apply(task.getAssignedTo())
+                (task.getAssignedTo() == null ? null : new UserEntityDTOMapper().apply(task.getCreatedBy())),
+                (task.getAssignedTo() == null ? null : new UserEntityDTOMapper().apply(task.getAssignedTo()))
         );
     }
 }

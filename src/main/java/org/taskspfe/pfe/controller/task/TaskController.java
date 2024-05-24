@@ -50,8 +50,6 @@ public class TaskController{
             @RequestParam(name = "taskCreatedBy" , required = false) UUID taskCreatedBy,
             @RequestParam(name = "taskAssignedTo" , required = false) UUID taskAssignedTo
     ) {
-
-
         return taskService.searchTasks(taskName, taskDescription, taskStatus, taskCreatedBy, taskAssignedTo);
     }
 

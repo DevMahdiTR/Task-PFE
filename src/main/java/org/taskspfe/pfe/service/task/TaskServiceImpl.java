@@ -33,16 +33,23 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public ResponseEntity<CustomResponseEntity<TaskDTO>> createTask(UserDetails userDetails, UUID assignedToId, Task newTask) {
         final UserEntity createdBy = userEntityService.getUserEntityByEmail(userDetails.getUsername());
-        final UserEntity assignedTo = (assignedToId != null) ? userEntityService.getUserEntityById(assignedToId) : null;
+        UserEntity assignedTo = null;
+        System.out.println( "assignedToId : "+ assignedToId);
+        if (assignedToId != null) {
+            assignedTo = userEntityService.getUserEntityById(assignedToId);
+        }
+
         newTask.setCreateAt(LocalDateTime.now());
         newTask.setCreatedBy(createdBy);
         newTask.setAssignedTo(assignedTo);
+
         final Task savedTask = taskRepository.save(newTask);
         final TaskDTO task = taskDTOMapper.apply(savedTask);
 
-        final CustomResponseEntity<TaskDTO> customResponseEntity = new CustomResponseEntity<>( HttpStatus.CREATED,task);
+        final CustomResponseEntity<TaskDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.CREATED, task);
         return new ResponseEntity<>(customResponseEntity, HttpStatus.CREATED);
     }
+
 
     @Override
     public ResponseEntity<CustomResponseEntity<TaskDTO>> updateTask(long taskId, int progress, UUID assignedToId,String status) {
@@ -80,7 +87,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public ResponseEntity<CustomResponseEntity<List<TaskDTO>>> fetchTaskByCurrentUser(UserDetails userDetails) {
         final UserEntity user = userEntityService.getUserEntityByEmail(userDetails.getUsername());
-        final List<TaskDTO> tasks = filterTasksString(null, null, null, user.getId(), null);
+
+        final List<TaskDTO> tasks = taskRepository.fetchAllTasksAssignedToUser(user.getId()).stream().map(taskDTOMapper).toList();
         final CustomResponseEntity<List<TaskDTO>> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, tasks);
         return new ResponseEntity<>(customResponseEntity, HttpStatus.OK);
     }

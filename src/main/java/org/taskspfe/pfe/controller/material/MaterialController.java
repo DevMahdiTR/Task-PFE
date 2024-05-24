@@ -33,7 +33,8 @@ public class MaterialController {
 
     @PutMapping("/{materialId}")
     public ResponseEntity<CustomResponseEntity<MaterialDTO>> updateMaterial(
-            @PathVariable("materialId") long materialId, Material material,
+            @PathVariable("materialId") long materialId,
+            @RequestBody Material material,
             @RequestParam(name = "clientId", required = false) UUID clientId
     ) {
         return materialService.updateMaterial(materialId, material, clientId);

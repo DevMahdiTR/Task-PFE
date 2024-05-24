@@ -23,7 +23,8 @@ public interface TaskRepository extends JpaRepository<Task , Integer> {
     @Query(value = "select t from Task t")
     List<Task> fetchAllTasks();
 
-
+    @Query(value = "select t from Task t where t.assignedTo.id = :userId")
+    List<Task> fetchAllTasksAssignedToUser(@Param("userId") final UUID userId);
 
 
     @Modifying

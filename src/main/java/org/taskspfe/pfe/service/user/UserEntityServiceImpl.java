@@ -58,7 +58,7 @@ public class UserEntityServiceImpl implements UserEntityService {
     public ResponseEntity<CustomResponseEntity<UserEntityDTO>> enableUser(UUID userId) {
         final UserEntity user = getUserEntityById(userId);
         user.setEnabled(true);
-        final UserEntityDTO userEntityDto = userEntityDTOMapper.apply(user);
+        final UserEntityDTO userEntityDto = userEntityDTOMapper.apply(userEntityRepository.save(user));
         final CustomResponseEntity<UserEntityDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK,userEntityDto);
         return new ResponseEntity<>(customResponseEntity,HttpStatus.OK);
     }
@@ -67,7 +67,7 @@ public class UserEntityServiceImpl implements UserEntityService {
     public ResponseEntity<CustomResponseEntity<UserEntityDTO>> disableUser(UUID userId) {
         final UserEntity user = getUserEntityById(userId);
         user.setEnabled(false);
-        final UserEntityDTO userEntityDto = userEntityDTOMapper.apply(user);
+        final UserEntityDTO userEntityDto = userEntityDTOMapper.apply(userEntityRepository.save(user));
         final CustomResponseEntity<UserEntityDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK,userEntityDto);
         return new ResponseEntity<>(customResponseEntity,HttpStatus.OK);
     }
