@@ -12,6 +12,8 @@ import org.taskspfe.pfe.utility.CustomResponseEntity;
 import org.taskspfe.pfe.utility.CustomResponseList;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("api/v1/users")
@@ -58,6 +60,10 @@ public class UserEntityController {
     @PutMapping("/admin/enable/{userId}")
     public ResponseEntity<CustomResponseEntity<UserEntityDTO>> enableUser(@PathVariable("userId") final UUID userId) {
         return userEntityService.enableUser(userId);
+    }
+    @GetMapping("/admin/count/clients/{year}")
+    public ResponseEntity<CustomResponseEntity<Map<String, Long>>> countClientsByYear(@PathVariable("year") final int year) {
+        return userEntityService.countClientsByYear(year);
     }
 
     @PutMapping("/admin/disable/{userId}")

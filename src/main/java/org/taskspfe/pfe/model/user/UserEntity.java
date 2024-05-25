@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.taskspfe.pfe.model.role.Role;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -42,6 +43,8 @@ public class UserEntity implements UserDetails {
     @Column(name = "password" , nullable = false)
     private String password;
 
+    @Column(name = "created_at" , nullable = false)
+    private LocalDateTime createdAt;
 
     @Column( name = "is_enabled", nullable = false)
     private boolean isEnabled;

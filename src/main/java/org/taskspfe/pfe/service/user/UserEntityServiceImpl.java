@@ -16,9 +16,10 @@ import org.taskspfe.pfe.repository.UserEntityRepository;
 import org.taskspfe.pfe.utility.CustomResponseEntity;
 import org.taskspfe.pfe.utility.CustomResponseList;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.*;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService {
@@ -114,6 +115,23 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     }
 
+    public long countClientsByMonth(YearMonth month) {
+        LocalDateTime start = month.atDay(1).atStartOfDay();
+        LocalDateTime end = month.plusMonths(1).atDay(1).atStartOfDay();
+        return userEntityRepository.countClientsByMonth(start, end);
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<Map<String, Long>>> countClientsByYear(int year) {
+        Map<String, Long> clientsCountByMonth = new LinkedHashMap<>();
+        for (int month = 1; month <= 12; month++) {
+            YearMonth yearMonth = YearMonth.of(year, month);
+            long count = countClientsByMonth(yearMonth);
+            clientsCountByMonth.put(String.format("%d-%02d", year, month), count);
+        }
+        final CustomResponseEntity<Map<String, Long>> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK,clientsCountByMonth);
+        return new ResponseEntity<>(customResponseEntity,HttpStatus.OK);
+    }
 
 
     @Override

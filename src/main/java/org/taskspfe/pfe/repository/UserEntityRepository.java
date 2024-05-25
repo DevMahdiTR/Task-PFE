@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.taskspfe.pfe.model.user.UserEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +41,8 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, UUID> {
     @Query(value = "select u from UserEntity u where u.role.name = 'TECHNICIAN' ")
     List<UserEntity> fetchAllTechnicians();
 
+    @Query("SELECT COUNT(u) FROM UserEntity u WHERE u.role.name = 'CLIENT' AND u.createdAt >= :start AND u.createdAt < :end")
+    long countClientsByMonth(LocalDateTime start, LocalDateTime end);
     @Query(value = "SELECT COUNT(U) FROM UserEntity U")
     long getTotalUserEntityCount();
 

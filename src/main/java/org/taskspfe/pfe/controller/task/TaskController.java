@@ -13,7 +13,9 @@ import org.taskspfe.pfe.service.email.EmailSenderService;
 import org.taskspfe.pfe.service.task.TaskService;
 import org.taskspfe.pfe.utility.CustomResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("api/v1/task")
@@ -58,6 +60,10 @@ public class TaskController{
         return taskService.fetchTaskByCurrentUser(userDetails);
     }
 
+
+
+
+
     @PutMapping("/technician/{taskId}")
     public ResponseEntity<CustomResponseEntity<TaskDTO>> updateTask(
             @PathVariable("taskId") long taskId,
@@ -90,7 +96,13 @@ public class TaskController{
     public ResponseEntity<CustomResponseEntity<TaskDTO>> deleteTask(@PathVariable("taskId") final long taskId) {
         return taskService.deleteTask(taskId);
     }
-
+    @GetMapping("/admin/count-tasks-daily")
+    public ResponseEntity<CustomResponseEntity<Map<LocalDate, Long>>> countTasksByDayInMonth(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month
+    ) {
+        return taskService.getTaskCountByDayInMonth(year, month);
+    }
 
 
 }

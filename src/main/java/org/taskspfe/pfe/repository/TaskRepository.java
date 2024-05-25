@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.taskspfe.pfe.model.task.Task;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +27,8 @@ public interface TaskRepository extends JpaRepository<Task , Integer> {
     @Query(value = "select t from Task t where t.assignedTo.id = :userId")
     List<Task> fetchAllTasksAssignedToUser(@Param("userId") final UUID userId);
 
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.createAt >= :start AND t.createAt < :end")
+    long countTasksByDay(LocalDateTime start, LocalDateTime end);
 
     @Modifying
     @Transactional
