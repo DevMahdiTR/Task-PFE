@@ -23,6 +23,7 @@ public interface UserEntityService {
     ResponseEntity<CustomResponseList<UserEntityDTO>> fetchAllUsers(final long pageNumber);
     ResponseEntity<CustomResponseEntity<UserEntityDTO>> fetchCurrentUser(final UserDetails userDetails);
     ResponseEntity<CustomResponseEntity<Map<String, Long>>> countClientsByYear(int year);
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> updateUser(@NotNull UserDetails userDetails,final UserEntity userEntity);
     UserEntity getUserEntityById(final UUID userId);
     UserEntity getUserEntityByEmail(final String email);
     boolean isEmailRegistered(final String email);

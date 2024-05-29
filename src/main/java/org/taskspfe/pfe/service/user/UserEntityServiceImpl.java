@@ -133,6 +133,16 @@ public class UserEntityServiceImpl implements UserEntityService {
         return new ResponseEntity<>(customResponseEntity,HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<CustomResponseEntity<UserEntityDTO>> updateUser(@NotNull UserDetails userDetails,final UserEntity userEntity){
+        final UserEntity currentUser = getUserEntityByEmail(userDetails.getUsername());
+        currentUser.setFirstName(userEntity.getFirstName());
+        currentUser.setLastName(userEntity.getLastName());
+        currentUser.setPhoneNumber(userEntity.getPhoneNumber());
+        final UserEntityDTO currentUserDto = userEntityDTOMapper.apply(userEntityRepository.save(currentUser));
+        final CustomResponseEntity<UserEntityDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK,currentUserDto);
+        return new ResponseEntity<>(customResponseEntity , HttpStatus.OK);
+    }
 
     @Override
     public boolean isEmailRegistered(final String email)
