@@ -123,14 +123,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ResponseEntity<CustomResponseEntity<List<TaskDTO>>> searchTasks(String taskName, String taskDescription, String taskStatus, Boolean isAccepted,UUID taskCreatedBy, UUID taskAssignedTo) {
-        List<TaskDTO> filteredTasks = filterTasksString(taskName, taskDescription, taskStatus, isAccepted,taskCreatedBy, taskAssignedTo);
+    public ResponseEntity<CustomResponseEntity<List<TaskDTO>>> searchTasks(Long taskId,String taskName, String taskDescription, String taskStatus, Boolean isAccepted,UUID taskCreatedBy, UUID taskAssignedTo) {
+        List<TaskDTO> filteredTasks = filterTasksString(taskId,taskName, taskDescription, taskStatus, isAccepted,taskCreatedBy, taskAssignedTo);
 
         CustomResponseEntity<List<TaskDTO>> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, filteredTasks);
         return new ResponseEntity<>(customResponseEntity, HttpStatus.OK);
     }
-    private List<TaskDTO> filterTasksString(String taskName, String taskDescription, String taskStatus, Boolean isAccepted,UUID taskCreatedBy, UUID taskAssignedTo) {
+    private List<TaskDTO> filterTasksString(Long taskId,String taskName, String taskDescription, String taskStatus, Boolean isAccepted,UUID taskCreatedBy, UUID taskAssignedTo) {
         return taskRepository.findAll().stream()
+                .filter(task -> taskId == null || task.getId() == taskId)
                 .filter(task -> taskName == null || task.getName().toLowerCase().contains(taskName.toLowerCase()))
                 .filter(task -> taskDescription == null || task.getDescription().toLowerCase().contains(taskDescription.toLowerCase()))
                 .filter(task -> taskStatus == null || task.getStatus().equalsIgnoreCase(taskStatus))

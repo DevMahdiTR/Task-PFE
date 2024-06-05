@@ -35,6 +35,7 @@ public interface TaskService {
     ResponseEntity<CustomResponseEntity<TaskDTO>> deleteTask(final long taskId);
     ResponseEntity<CustomResponseEntity<List<TaskDTO>>> getAllTasks();
     ResponseEntity<CustomResponseEntity<List<TaskDTO>>> searchTasks(
+            final Long taskId,
             final String taskName,
             final String taskDescription,
             final String taskStatus,

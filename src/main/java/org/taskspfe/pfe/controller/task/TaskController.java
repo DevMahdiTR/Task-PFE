@@ -47,6 +47,7 @@ public class TaskController{
 
     @GetMapping("/all/search")
     public ResponseEntity<CustomResponseEntity<List<TaskDTO>>> searchTasks(
+            @RequestParam(name = "taskId" ,required = false) Long taskId,
             @RequestParam(name = "taskName" , required = false) String taskName,
             @RequestParam(name = "taskDescription" , required = false) String taskDescription,
             @RequestParam(name = "taskStatus" , required = false) String taskStatus,
@@ -54,7 +55,7 @@ public class TaskController{
             @RequestParam(name = "taskCreatedBy" , required = false) UUID taskCreatedBy,
             @RequestParam(name = "taskAssignedTo" , required = false) UUID taskAssignedTo
     ) {
-        return taskService.searchTasks(taskName, taskDescription, taskStatus, isAccepted,taskCreatedBy, taskAssignedTo);
+        return taskService.searchTasks(taskId,taskName, taskDescription, taskStatus, isAccepted,taskCreatedBy, taskAssignedTo);
     }
 
     @GetMapping("/all/current")
