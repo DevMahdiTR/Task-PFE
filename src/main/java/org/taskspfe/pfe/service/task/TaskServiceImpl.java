@@ -8,9 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.taskspfe.pfe.dto.task.TaskDTO;
 import org.taskspfe.pfe.dto.task.TaskDTOMapper;
 import org.taskspfe.pfe.exceptions.ResourceNotFoundException;
+import org.taskspfe.pfe.model.soustask.SousTask;
 import org.taskspfe.pfe.model.task.Task;
 import org.taskspfe.pfe.model.task.TaskStatus;
 import org.taskspfe.pfe.model.user.UserEntity;
+import org.taskspfe.pfe.repository.SousTaskRepository;
 import org.taskspfe.pfe.repository.TaskRepository;
 import org.taskspfe.pfe.service.user.UserEntityService;
 import org.taskspfe.pfe.utility.CustomResponseEntity;
@@ -26,10 +28,12 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final TaskDTOMapper taskDTOMapper;
     private final UserEntityService userEntityService;
-    public TaskServiceImpl(TaskRepository taskRepository, TaskDTOMapper taskDTOMapper, UserEntityService userEntityService) {
+    private final SousTaskRepository sousTaskRepository;
+    public TaskServiceImpl(TaskRepository taskRepository, TaskDTOMapper taskDTOMapper, UserEntityService userEntityService, SousTaskRepository sousTaskRepository) {
         this.taskRepository = taskRepository;
         this.taskDTOMapper = taskDTOMapper;
         this.userEntityService = userEntityService;
+        this.sousTaskRepository = sousTaskRepository;
     }
 
     @Override
@@ -44,6 +48,8 @@ public class TaskServiceImpl implements TaskService {
         newTask.setCreateAt(LocalDateTime.now());
         newTask.setCreatedBy(createdBy);
         newTask.setAssignedTo(assignedTo);
+        newTask.setAccepted(false);
+        newTask.setStatus(TaskStatus.SUSPENDED.toString());
 
         final TaskDTO task = taskDTOMapper.apply(taskRepository.save(newTask));
 
@@ -60,6 +66,7 @@ public class TaskServiceImpl implements TaskService {
         savedTask.setProgress( (progress != 0) ? progress : savedTask.getProgress() );
         savedTask.setStatus( (status != null) ? status : savedTask.getStatus() );
         savedTask.setAssignedTo(assignedTo);
+
         final Task updatedTask = taskRepository.save(savedTask);
         final TaskDTO task = taskDTOMapper.apply(updatedTask);
         final CustomResponseEntity<TaskDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, task);
@@ -75,8 +82,11 @@ public class TaskServiceImpl implements TaskService {
         savedTask.setTimeInHours(taskDetails.getTimeInHours());
         savedTask.setProgress(taskDetails.getProgress());
         savedTask.setDescription(taskDetails.getDescription());
-        savedTask.setStatus(taskDetails.getStatus());
         savedTask.setAssignedTo(assignedTo);
+        savedTask.setEndAt(taskDetails.getEndAt());
+
+        if(savedTask.isAccepted())
+            savedTask.setStatus(taskDetails.getStatus());
 
         final Task updatedTask = taskRepository.save(savedTask);
         final TaskDTO task = taskDTOMapper.apply(updatedTask);
@@ -97,6 +107,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public ResponseEntity<CustomResponseEntity<TaskDTO>> deleteTask(long taskId) {
         Task savedTask = getTaskById(taskId);
+        sousTaskRepository.deleteAll(savedTask.getSousTasks());
         taskRepository.deleteTaskById(taskId);
         final TaskDTO task = taskDTOMapper.apply(savedTask);
         final CustomResponseEntity<TaskDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, task);
@@ -112,17 +123,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ResponseEntity<CustomResponseEntity<List<TaskDTO>>> searchTasks(String taskName, String taskDescription, String taskStatus, UUID taskCreatedBy, UUID taskAssignedTo) {
-        List<TaskDTO> filteredTasks = filterTasksString(taskName, taskDescription, taskStatus, taskCreatedBy, taskAssignedTo);
+    public ResponseEntity<CustomResponseEntity<List<TaskDTO>>> searchTasks(String taskName, String taskDescription, String taskStatus, Boolean isAccepted,UUID taskCreatedBy, UUID taskAssignedTo) {
+        List<TaskDTO> filteredTasks = filterTasksString(taskName, taskDescription, taskStatus, isAccepted,taskCreatedBy, taskAssignedTo);
 
         CustomResponseEntity<List<TaskDTO>> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, filteredTasks);
         return new ResponseEntity<>(customResponseEntity, HttpStatus.OK);
     }
-    private List<TaskDTO> filterTasksString(String taskName, String taskDescription, String taskStatus, UUID taskCreatedBy, UUID taskAssignedTo) {
+    private List<TaskDTO> filterTasksString(String taskName, String taskDescription, String taskStatus, Boolean isAccepted,UUID taskCreatedBy, UUID taskAssignedTo) {
         return taskRepository.findAll().stream()
                 .filter(task -> taskName == null || task.getName().toLowerCase().contains(taskName.toLowerCase()))
                 .filter(task -> taskDescription == null || task.getDescription().toLowerCase().contains(taskDescription.toLowerCase()))
                 .filter(task -> taskStatus == null || task.getStatus().equalsIgnoreCase(taskStatus))
+                .filter(task -> isAccepted == null || task.isAccepted() == isAccepted)
                 .filter(task -> taskCreatedBy == null || task.getCreatedBy().getId().equals(taskCreatedBy))
                 .filter(task -> taskAssignedTo == null || task.getAssignedTo().getId().equals(taskAssignedTo))
                 .map(taskDTOMapper)
@@ -154,6 +166,58 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.fetchTaskById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task not found with id: " + taskId)
         );
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> acceptTask(long taskId) {
+        final Task task = getTaskById(taskId);
+        task.setAccepted(true);
+        task.setStatus(TaskStatus.TODO.toString());
+        final TaskDTO updatedTask = taskDTOMapper.apply(taskRepository.save(task));
+        return ResponseEntity.ok(new CustomResponseEntity<>(HttpStatus.OK, updatedTask));
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(long taskId) {
+        final Task task = getTaskById(taskId);
+        task.setAccepted(false);
+        task.setStatus(TaskStatus.SUSPENDED.toString());
+        final TaskDTO updatedTask = taskDTOMapper.apply(taskRepository.save(task));
+        return ResponseEntity.ok(new CustomResponseEntity<>(HttpStatus.OK, updatedTask));
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> addSousTask(long taskId, SousTask sousTask) {
+        final Task savedTask = getTaskById(taskId);
+        final SousTask savedSousTask = sousTaskRepository.save(sousTask);
+        savedTask.getSousTasks().add(savedSousTask);
+        final TaskDTO task = taskDTOMapper.apply(taskRepository.save(savedTask));
+        final CustomResponseEntity<TaskDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, task);
+        return new ResponseEntity<>(customResponseEntity, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> removeSousTask(long taskId,long sousTaskId) {
+        final Task savedTask = getTaskById(taskId);
+        sousTaskRepository.deleteSousTaskById(sousTaskId);
+        savedTask.getSousTasks().removeIf(sousTask -> sousTask.getId() == sousTaskId);
+        final TaskDTO task = taskDTOMapper.apply(taskRepository.save(savedTask));
+        final CustomResponseEntity<TaskDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, task);
+        return new ResponseEntity<>(customResponseEntity, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> updateSousTask(long taskId,long sousTaskId, SousTask sousTask) {
+        final Task savedTask = getTaskById(taskId);
+        final SousTask savedSousTask = savedTask.getSousTasks().stream()
+                .filter(sousTask1 -> sousTask1.getId() == sousTaskId)
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("SousTask not found with id: " + sousTaskId));
+        savedSousTask.setTitle(sousTask.getTitle());
+        savedSousTask.setDescription(sousTask.getDescription());
+        final TaskDTO task = taskDTOMapper.apply(taskRepository.save(savedTask));
+        final CustomResponseEntity<TaskDTO> customResponseEntity = new CustomResponseEntity<>(HttpStatus.OK, task);
+        return new ResponseEntity<>(customResponseEntity, HttpStatus.OK);
     }
 
 

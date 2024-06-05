@@ -40,24 +40,20 @@ public class EmailSenderServiceImpl  implements  EmailSenderService{
     }
 
     @Override
-    public String emailTemplateContact(String title, String description, String task) {
-        return "<div style=\"font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0f7fa;\">\n" +
-                "    <div style=\"max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\">\n" +
-                "        <div style=\"text-align: center; padding-bottom: 20px; border-bottom: 2px solid #00796b;\">\n" +
-                "            <h1 style=\"margin: 0; font-size: 26px; color: #004d40;\">" + title + "</h1>\n" +
+    public String emailTemplateContact(String subject, String description) {
+        return "<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;\">\n" +
+                "    <div style=\"background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 100%; max-width: 600px; margin: 0 auto;\">\n" +
+                "        <h2 style=\"margin-bottom: 20px; text-align: center;\">Reclamation</h2>\n" +
+                "        <div style=\"margin-bottom: 15px;\">\n" +
+                "            <h3 style=\"margin-bottom: 5px;\">Subject</h3>\n" +
+                "            <p style=\"padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f9f9f9;\">"+subject+".</p>\n" +
                 "        </div>\n" +
-                "        <div style=\"padding: 20px 0;\">\n" +
-                "            <p style=\"font-size: 16px; color: #00796b; line-height: 1.6; margin: 0;\">\n" +
-                "              " + description + "\n" +
-                "            </p>\n" +
-                "        </div>\n" +
-                "        <div style=\"padding: 20px; background-color: #e0f2f1; border-radius: 4px; margin-top: 20px; border-left: 4px solid #00796b;\">\n" +
-                "            <p style=\"font-size: 14px; color: #004d40;\">\n" +
-                "               <strong>"+ task + "</strong>\n" +
-                "            </p>\n" +
+                "        <div style=\"margin-bottom: 15px;\">\n" +
+                "            <h3 style=\"margin-bottom: 5px;\">Description</h3>\n" +
+                "            <p style=\"padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f9f9f9;\">"+description + ".</p>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
-                "</div>";
+                "</body>";
     }
 
 

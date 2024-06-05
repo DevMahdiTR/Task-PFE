@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.taskspfe.pfe.model.soustask.SousTask;
 import org.taskspfe.pfe.model.user.UserEntity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,6 +41,9 @@ public class Task {
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
+    @Column(name = "end_at")
+    private Date endAt;
+
     @Column(name = "progress" ,nullable = false)
     private int progress;
 
@@ -47,7 +53,12 @@ public class Task {
     @Column(name = "status")
     private String status ;
 
+    @Column(name = "is_accepted")
+    private boolean isAccepted;
 
+    @OneToMany
+    @JoinColumn(name = "sous_task_id")
+    private List<SousTask> sousTasks;
 
     @OneToOne
     @JoinColumn(name = "created_by")

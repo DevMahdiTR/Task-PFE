@@ -3,12 +3,14 @@ package org.taskspfe.pfe.controller.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.taskspfe.pfe.dto.user.UserEntityDTO;
 import org.taskspfe.pfe.model.user.UserEntity;
+import org.taskspfe.pfe.service.email.EmailSenderService;
 import org.taskspfe.pfe.service.user.UserEntityService;
 import org.taskspfe.pfe.utility.CustomResponseEntity;
 import org.taskspfe.pfe.utility.CustomResponseList;
@@ -23,10 +25,12 @@ import java.util.UUID;
 public class UserEntityController {
 
     private final UserEntityService userEntityService;
+    private final EmailSenderService emailSenderService;
 
-    public UserEntityController(UserEntityService userEntityService)
+    public UserEntityController(UserEntityService userEntityService, EmailSenderService emailSenderService)
     {
         this.userEntityService = userEntityService;
+        this.emailSenderService = emailSenderService;
     }
 
 
@@ -84,6 +88,17 @@ public class UserEntityController {
     ){
         return userEntityService.updateUser(userDetails,userEntity);
     }
+
+
+
+    @GetMapping("/all/reclamation")
+    public ResponseEntity<CustomResponseEntity<String>> sendMail(
+            @RequestParam(name = "subject" , required = true) String subject ,
+            @RequestParam(name = "description" , required = true) String description){
+        emailSenderService.sendEmail("medmahdidev@gmail.com",subject , emailSenderService.emailTemplateContact(subject,description));
+        return ResponseEntity.ok(new CustomResponseEntity<>(HttpStatus.OK,"Email sent successfully"));
+    }
+
 
 
 

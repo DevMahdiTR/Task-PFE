@@ -57,18 +57,21 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
 
-                .requestMatchers("/api/v1/auth/register").hasAuthority("ADMIN")
+                .requestMatchers("/api/v1/auth/admin/register").hasAuthority("ADMIN")
                 .requestMatchers("/api/v1/auth/login").permitAll()
                 .requestMatchers("/api/v1/auth/logout").permitAll()
+                .requestMatchers("/api/v1/auth/register").permitAll()
 
-                .requestMatchers("/api/v1/task/admin/**").hasAnyAuthority("ADMIN","CLIENT")
-                .requestMatchers("/api/v1/task/technician/**").hasAuthority("TECHNICIAN")
-                .requestMatchers("/api/v1/task/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN")
+
+                .requestMatchers("/api/v1/task/admin/**").permitAll()//hasAnyAuthority("ADMIN","CLIENT")
+                .requestMatchers("/api/v1/task/technician/**").permitAll()//hasAuthority("TECHNICIAN")
+                .requestMatchers("/api/v1/task/all/**").permitAll()//hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN")
 
                 .requestMatchers("/api/v1/material/**").hasAuthority("ADMIN")
 
                 .requestMatchers("/api/v1/users/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/v1/users/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN")
+                .requestMatchers("/api/v1/product/**").permitAll()
                 
                 .anyRequest().authenticated()
                 .and()

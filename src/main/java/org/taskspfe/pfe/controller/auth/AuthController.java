@@ -24,14 +24,22 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<CustomResponseEntity<RegisterResponseDTO>>  register(
+    @PostMapping("/admin/register")
+    public ResponseEntity<CustomResponseEntity<RegisterResponseDTO>> adminRegister(
             @Valid @RequestBody RegisterDTO registerDto,
             @RequestParam(name = "roleName", required = true) final String roleName
             )
     {
         return authService.register(registerDto, roleName);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<CustomResponseEntity<RegisterResponseDTO>> register(
+            @Valid @RequestBody RegisterDTO registerDto
+    ) {
+        return authService.register(registerDto, "CLIENT");
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<CustomResponseEntity<LogInResponseDTO>>  login(@Valid @RequestBody LoginDTO loginDto)

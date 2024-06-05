@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.taskspfe.pfe.dto.task.TaskDTO;
+import org.taskspfe.pfe.model.soustask.SousTask;
 import org.taskspfe.pfe.model.task.Task;
 import org.taskspfe.pfe.service.email.EmailSenderService;
 import org.taskspfe.pfe.service.task.TaskService;
@@ -49,19 +50,17 @@ public class TaskController{
             @RequestParam(name = "taskName" , required = false) String taskName,
             @RequestParam(name = "taskDescription" , required = false) String taskDescription,
             @RequestParam(name = "taskStatus" , required = false) String taskStatus,
+            @RequestParam(name = "isAccepted" , required = false) Boolean isAccepted,
             @RequestParam(name = "taskCreatedBy" , required = false) UUID taskCreatedBy,
             @RequestParam(name = "taskAssignedTo" , required = false) UUID taskAssignedTo
     ) {
-        return taskService.searchTasks(taskName, taskDescription, taskStatus, taskCreatedBy, taskAssignedTo);
+        return taskService.searchTasks(taskName, taskDescription, taskStatus, isAccepted,taskCreatedBy, taskAssignedTo);
     }
 
     @GetMapping("/all/current")
     public ResponseEntity<CustomResponseEntity<List<TaskDTO>>> fetchTaskByCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         return taskService.fetchTaskByCurrentUser(userDetails);
     }
-
-
-
 
 
     @PutMapping("/technician/{taskId}")
@@ -74,14 +73,6 @@ public class TaskController{
         return taskService.updateTask(taskId, progress, assignedToId, status);
     }
 
-    @GetMapping("/technician/send")
-    public ResponseEntity<CustomResponseEntity<String>> sendMail(
-            @RequestParam(name = "title" , required = true) String title ,
-            @RequestParam(name = "description" , required = true) String description ,
-            @RequestParam(name = "task" , required = true) String task){
-        emailSenderService.sendEmail("medmahdidev@gmail.com","Task Email" , emailSenderService.emailTemplateContact(title,description,task));
-        return ResponseEntity.ok(new CustomResponseEntity<>(HttpStatus.OK,"Email sent successfully"));
-    }
 
     @PutMapping("/admin/{taskId}")
     public ResponseEntity<CustomResponseEntity<TaskDTO>> updateTask(
@@ -104,5 +95,36 @@ public class TaskController{
         return taskService.getTaskCountByDayInMonth(year, month);
     }
 
+    @PutMapping("/admin/{taskId}/accept")
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> acceptTask(@PathVariable("taskId") long taskId) {
+        return taskService.acceptTask(taskId);
+    }
+    @PutMapping("/admin/{taskId}/reject")
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(@PathVariable("taskId") long taskId) {
+        return taskService.rejectTask(taskId);
+    }
+
+
+    @PostMapping("/technician/{taskId}/sous-tasks")
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> addSousTask(
+            @PathVariable long taskId,
+            @RequestBody SousTask sousTask) {
+        return taskService.addSousTask(taskId, sousTask);
+    }
+
+    @DeleteMapping("/technician/{taskId}/sous-tasks/{sousTaskId}")
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> removeSousTask(
+            @PathVariable long taskId,
+            @PathVariable long sousTaskId) {
+        return taskService.removeSousTask(taskId, sousTaskId);
+    }
+
+    @PutMapping("/technician/{taskId}/sous-tasks/{sousTaskId}")
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> updateSousTask(
+            @PathVariable long taskId,
+            @PathVariable long sousTaskId,
+            @RequestBody SousTask sousTask) {
+        return taskService.updateSousTask(taskId, sousTaskId, sousTask);
+    }
 
 }
