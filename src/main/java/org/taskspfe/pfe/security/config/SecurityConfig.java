@@ -63,9 +63,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/register").permitAll()
 
 
-                .requestMatchers("/api/v1/task/admin/**").permitAll()//hasAnyAuthority("ADMIN","CLIENT")
-                .requestMatchers("/api/v1/task/technician/**").permitAll()//hasAuthority("TECHNICIAN")
-                .requestMatchers("/api/v1/task/all/**").permitAll()//hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN")
+                .requestMatchers("/api/v1/task/admin/**").hasAnyAuthority("ADMIN","CLIENT")
+                .requestMatchers("/api/v1/task/technician/**").hasAuthority("TECHNICIAN")
+                .requestMatchers("/api/v1/task/all/**").permitAll()
 
                 .requestMatchers("/api/v1/material/**").hasAuthority("ADMIN")
 
