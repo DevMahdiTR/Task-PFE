@@ -27,6 +27,7 @@ import org.taskspfe.pfe.service.user.UserEntityService;
 import org.taskspfe.pfe.utility.CustomResponseEntity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Service
 public class AuthServiceImpl  implements  AuthService{
@@ -66,6 +67,7 @@ public class AuthServiceImpl  implements  AuthService{
                         .phoneNumber(registerDto.getPhoneNumber())
                         .createdAt(LocalDateTime.now())
                         .password(passwordEncoder.encode(registerDto.getPassword()))
+                        .cartItems(new ArrayList<>())
                         .isEnabled(true)
                         .role(role)
                         .build();

@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/register").permitAll()
 
 
-                .requestMatchers("/api/v1/task/admin/**").hasAnyAuthority("ADMIN","CLIENT")
+                .requestMatchers("/api/v1/task/admin/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN","SUPERVISOR")
                 .requestMatchers("/api/v1/task/technician/**").hasAnyAuthority("TECHNICIAN","SUPERVISOR")
                 .requestMatchers("/api/v1/task/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN","SUPERVISOR")
 
