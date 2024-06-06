@@ -25,7 +25,7 @@ public interface UserEntityService {
     ResponseEntity<CustomResponseEntity<UserEntityDTO>> enableUser(final UUID userId);
     ResponseEntity<CustomResponseEntity<UserEntityDTO>> disableUser(final UUID userId);
     ResponseEntity<CustomResponseEntity<UserEntityDTO>> fetchUserById(final UUID userId);
-    ResponseEntity<CustomResponseList<UserEntityDTO>> fetchAllUsers(final long pageNumber);
+    ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllUsers();
     ResponseEntity<CustomResponseEntity<UserEntityDTO>> fetchCurrentUser(final UserDetails userDetails);
     ResponseEntity<CustomResponseEntity<Map<String, Long>>> countClientsByYear(int year);
     ResponseEntity<CustomResponseEntity<UserEntityDTO>> updateUser(@NotNull UserDetails userDetails,final UserEntity userEntity);

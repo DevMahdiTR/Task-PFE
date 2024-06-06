@@ -43,10 +43,8 @@ public class UserEntityController {
     }
 
     @GetMapping("/admin/get/all/users")
-    public ResponseEntity<CustomResponseList<UserEntityDTO>> fetchAllUsers(
-            @RequestParam(value = "pageNumber", required = true) final long pageNumber
-    ) {
-        return userEntityService.fetchAllUsers(pageNumber);
+    public ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllUsers() {
+        return userEntityService.fetchAllUsers();
     }
 
     @GetMapping("/all/get/current_user")

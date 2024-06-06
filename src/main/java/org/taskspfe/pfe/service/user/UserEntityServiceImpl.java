@@ -104,25 +104,10 @@ public class UserEntityServiceImpl implements UserEntityService {
 
 
     @Override
-    public ResponseEntity<CustomResponseList<UserEntityDTO>> fetchAllUsers(final long pageNumber)
+    public ResponseEntity<CustomResponseEntity<List<UserEntityDTO>>> fetchAllUsers()
     {
-        final Pageable pageable = PageRequest.of((int) pageNumber - 1, 10);
-
-
-        final List<UserEntityDTO> userEntityFullDTOList = userEntityRepository.fetchAllUsers(pageable).stream().map(userEntityDTOMapper).toList();
-
-        if(userEntityFullDTOList.isEmpty() && pageNumber > 1)
-        {
-            return fetchAllUsers(1);
-        }
-        final CustomResponseList<UserEntityDTO> customResponse =
-                new CustomResponseList<>(
-                        HttpStatus.OK,
-                        userEntityFullDTOList,
-                        userEntityFullDTOList.size(),
-                        userEntityRepository.getTotalUserEntityCount()
-                );
-        return new ResponseEntity<>(customResponse, HttpStatus.OK);
+        final List<UserEntityDTO> userEntityFullDTOList = userEntityRepository.fetchAllUsers().stream().map(userEntityDTOMapper).toList();
+        return ResponseEntity.ok(new CustomResponseEntity<>(HttpStatus.OK,userEntityFullDTOList));
     }
     @Override
     public ResponseEntity<CustomResponseEntity<UserEntityDTO>> fetchCurrentUser(@NotNull final UserDetails userDetails)

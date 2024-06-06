@@ -23,8 +23,8 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, UUID> {
     @Query(value = "SELECT U FROM UserEntity U WHERE  U.email = :email ")
     Optional<UserEntity> fetchUserWithEmail(@Param("email") String email);
 
-    @Query(value = "SELECT U FROM UserEntity U where U.role.name != 'ADMIN' order by U.id ")
-    List<UserEntity> fetchAllUsers(Pageable pageable);
+    @Query(value = "SELECT U FROM UserEntity U")
+    List<UserEntity> fetchAllUsers();
 
     @Query("SELECT U FROM UserEntity U WHERE U.email LIKE :prefix%")
     List<UserEntity> fetchUsersWithEmailPrefix(@Param("prefix")String prefix);
