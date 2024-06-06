@@ -179,9 +179,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(long taskId) {
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(long taskId, String causeOfRejection) {
         final Task task = getTaskById(taskId);
         task.setAccepted(false);
+        task.setCauseOfRejection(causeOfRejection);
         task.setStatus(TaskStatus.SUSPENDED.toString());
         final TaskDTO updatedTask = taskDTOMapper.apply(taskRepository.save(task));
         return ResponseEntity.ok(new CustomResponseEntity<>(HttpStatus.OK, updatedTask));

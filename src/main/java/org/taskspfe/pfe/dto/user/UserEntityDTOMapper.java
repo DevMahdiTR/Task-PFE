@@ -2,6 +2,7 @@ package org.taskspfe.pfe.dto.user;
 
 
 import org.springframework.stereotype.Service;
+import org.taskspfe.pfe.dto.shop.CartItemDTOMapper;
 import org.taskspfe.pfe.model.user.UserEntity;
 
 import java.util.function.Function;
@@ -18,7 +19,8 @@ public class UserEntityDTOMapper implements Function<UserEntity, UserEntityDTO> 
                 userEntity.getPhoneNumber(),
                 userEntity.getCreatedAt(),
                 userEntity.isEnabled(),
-                userEntity.getRole()
+                userEntity.getRole(),
+                userEntity.getCartItems().stream().map(new CartItemDTOMapper()).toList()
         );
     }
 }

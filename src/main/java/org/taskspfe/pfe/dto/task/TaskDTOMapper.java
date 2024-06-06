@@ -18,6 +18,7 @@ public class TaskDTOMapper implements Function<Task,TaskDTO> {
                 task.getDescription(),
                 task.getStatus(),
                 task.isAccepted(),
+                task.getCauseOfRejection(),
                 task.getSousTasks(),
                 task.getCreateAt(),
                 task.getEndAt(),

@@ -19,19 +19,19 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<CustomResponseEntity<ProductDTO>> createProduct(
             @RequestParam("image") MultipartFile image,
             @RequestParam("productJson") String productJson) throws IOException {
         return productService.createProduct(image, productJson);
     }
 
-    @GetMapping("/{productId}/image")
+    @GetMapping("/all/{productId}/image")
     public ResponseEntity<byte[]> downloadProductImage(@PathVariable long productId) throws IOException {
         return productService.downloadProductImage(productId);
     }
 
-    @PutMapping("/{productId}")
+    @PutMapping("/admin/{productId}")
     public ResponseEntity<CustomResponseEntity<ProductDTO>> updateProduct(
             @PathVariable long productId,
             @RequestParam(value = "image", required = false) MultipartFile image,
@@ -39,17 +39,17 @@ public class ProductController {
         return productService.updateProduct(productId, image, productJson);
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/all/{productId}")
     public ResponseEntity<CustomResponseEntity<ProductDTO>> fetchProductById(@PathVariable long productId) {
         return productService.fetchProductById(productId);
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/admin/{productId}")
     public ResponseEntity<CustomResponseEntity<ProductDTO>> deleteProductById(@PathVariable long productId) throws IOException {
         return productService.deleteProductById(productId);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<CustomResponseEntity<List<ProductDTO>>> getAllProducts() {
         return productService.getAllProducts();
     }

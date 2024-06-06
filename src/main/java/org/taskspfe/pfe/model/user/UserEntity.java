@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.taskspfe.pfe.model.role.Role;
+import org.taskspfe.pfe.model.shop.CartItem;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -52,6 +53,9 @@ public class UserEntity implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

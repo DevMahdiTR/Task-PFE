@@ -56,6 +56,9 @@ public class Task {
     @Column(name = "is_accepted")
     private boolean isAccepted;
 
+    @Column(name  = "cause_of_rejection")
+    private String causeOfRejection;
+
     @OneToMany
     @JoinColumn(name = "sous_task_id")
     private List<SousTask> sousTasks;

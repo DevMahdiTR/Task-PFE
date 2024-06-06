@@ -4,6 +4,7 @@ package org.taskspfe.pfe.service.product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.taskspfe.pfe.dto.product.ProductDTO;
+import org.taskspfe.pfe.model.product.Product;
 import org.taskspfe.pfe.utility.CustomResponseEntity;
 
 import java.io.IOException;
@@ -17,4 +18,6 @@ public interface ProductService {
     ResponseEntity<CustomResponseEntity<ProductDTO>> fetchProductById(long productId);
     ResponseEntity<CustomResponseEntity<ProductDTO>> deleteProductById(long productId) throws IOException;
     ResponseEntity<CustomResponseEntity<List<ProductDTO>>> getAllProducts();
+
+    Product getProductById(final long productId);
 }

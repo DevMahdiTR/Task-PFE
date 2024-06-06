@@ -16,6 +16,7 @@ public record TaskDTO (
         String description,
         String status,
         boolean isAccepted,
+        String causeOfRejection,
         List<SousTask> sousTasks,
         LocalDateTime createAt,
         Date endAt,

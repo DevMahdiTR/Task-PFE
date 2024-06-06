@@ -63,7 +63,6 @@ public class TaskController{
         return taskService.fetchTaskByCurrentUser(userDetails);
     }
 
-
     @PutMapping("/technician/{taskId}")
     public ResponseEntity<CustomResponseEntity<TaskDTO>> updateTask(
             @PathVariable("taskId") long taskId,
@@ -73,7 +72,6 @@ public class TaskController{
     ) {
         return taskService.updateTask(taskId, progress, assignedToId, status);
     }
-
 
     @PutMapping("/admin/{taskId}")
     public ResponseEntity<CustomResponseEntity<TaskDTO>> updateTask(
@@ -101,10 +99,12 @@ public class TaskController{
         return taskService.acceptTask(taskId);
     }
     @PutMapping("/admin/{taskId}/reject")
-    public ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(@PathVariable("taskId") long taskId) {
-        return taskService.rejectTask(taskId);
+    public ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(
+            @PathVariable("taskId") long taskId,
+            @RequestParam(name = "causeOfRejection" , required = false) String causeOfRejection
+    ) {
+        return taskService.rejectTask(taskId,causeOfRejection);
     }
-
 
     @PostMapping("/technician/{taskId}/sous-tasks")
     public ResponseEntity<CustomResponseEntity<TaskDTO>> addSousTask(

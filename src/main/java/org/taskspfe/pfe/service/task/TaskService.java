@@ -47,7 +47,7 @@ public interface TaskService {
     Task getTaskById(final long taskId);
 
     ResponseEntity<CustomResponseEntity<TaskDTO>> acceptTask(long taskId);
-    ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(long taskId);
+    ResponseEntity<CustomResponseEntity<TaskDTO>> rejectTask(long taskId ,String causeOfRejection);
 
     ResponseEntity<CustomResponseEntity<TaskDTO>> addSousTask(long taskId, SousTask sousTask);
     ResponseEntity<CustomResponseEntity<TaskDTO>> removeSousTask(long taskId,long sousTaskId);

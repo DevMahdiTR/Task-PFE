@@ -2,6 +2,7 @@ package org.taskspfe.pfe.dto.user;
 
 
 
+import org.taskspfe.pfe.dto.shop.CartItemDTO;
 import org.taskspfe.pfe.model.role.Role;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,8 @@ public record UserEntityDTO (
             String phoneNumber,
             LocalDateTime createdAt,
             boolean isEnabled,
-            Role role
+            Role role,
+            List<CartItemDTO> cartItems
         )
 {
 

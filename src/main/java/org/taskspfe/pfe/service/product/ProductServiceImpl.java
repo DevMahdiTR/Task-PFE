@@ -87,7 +87,7 @@ public class ProductServiceImpl implements ProductService{
 
     }
 
-    private Product getProductById(long productId){
+    public Product getProductById(long productId){
         return productRepository.fetchProductById(productId).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id "+productId+" not found")
         );
