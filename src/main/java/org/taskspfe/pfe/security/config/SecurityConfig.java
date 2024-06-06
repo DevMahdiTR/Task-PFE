@@ -64,15 +64,15 @@ public class SecurityConfig {
 
 
                 .requestMatchers("/api/v1/task/admin/**").hasAnyAuthority("ADMIN","CLIENT")
-                .requestMatchers("/api/v1/task/technician/**").hasAuthority("TECHNICIAN")
-                .requestMatchers("/api/v1/task/all/**").permitAll()
+                .requestMatchers("/api/v1/task/technician/**").hasAnyAuthority("TECHNICIAN","SUPERVISOR")
+                .requestMatchers("/api/v1/task/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN","SUPERVISOR")
 
                 .requestMatchers("/api/v1/material/**").hasAuthority("ADMIN")
 
                 .requestMatchers("/api/v1/users/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/v1/users/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN")
+                .requestMatchers("/api/v1/users/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN","SUPERVISOR")
 
-                .requestMatchers("/api/v1/product/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN")
+                .requestMatchers("/api/v1/product/all/**").hasAnyAuthority("ADMIN","CLIENT","TECHNICIAN","SUPERVISOR")
                 .requestMatchers("/api/v1/product/admin/**").hasAuthority("ADMIN")
 
                 
