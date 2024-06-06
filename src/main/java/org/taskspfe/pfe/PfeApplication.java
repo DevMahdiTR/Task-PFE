@@ -27,5 +27,6 @@ public class PfeApplication {
 //        roleRepository.save(new Role("ADMIN"));
 //        roleRepository.save(new Role("CLIENT"));
 //        roleRepository.save(new Role("TECHNICIAN"));
+//        roleRepository.save(new Role("SUPERVISOR"));
 //    }
 }

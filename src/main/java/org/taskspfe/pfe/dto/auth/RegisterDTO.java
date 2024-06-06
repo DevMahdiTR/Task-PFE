@@ -17,9 +17,7 @@ public class RegisterDTO {
 
     private String phoneNumber;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
-            message = "Invalid password. Passwords must be at least 8 characters long and include at least one uppercase letter, " +
-                    "one lowercase letter, one digit, and one special character.")
+    @Size(min = 8 , max = 20, message ="Invalid password length. Please enter a password with a minimum of 8 characters and a maximum of 20 characters.")
     private String password;
 
     public RegisterDTO(String firstName, String lastName, String email, String password) {
