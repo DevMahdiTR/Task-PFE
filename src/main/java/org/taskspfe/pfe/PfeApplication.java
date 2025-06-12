@@ -17,16 +17,19 @@ public class PfeApplication {
         SpringApplication.run(PfeApplication.class, args);
     }
 
-//    @PostConstruct
-//    private void initProject()
-//    {
-//        initRoles();
-//    }
-//    private void initRoles()
-//    {
-//        roleRepository.save(new Role("ADMIN"));
-//        roleRepository.save(new Role("CLIENT"));
-//        roleRepository.save(new Role("TECHNICIAN"));
-//        roleRepository.save(new Role("SUPERVISOR"));
-//    }
+    @PostConstruct
+    private void initProject()
+    {
+        initRoles();
+    }
+    private void initRoles()
+    {
+        if (roleRepository.count() > 0) {
+            return; // Roles already initialized
+        }
+        roleRepository.save(new Role("ADMIN"));
+        roleRepository.save(new Role("CLIENT"));
+        roleRepository.save(new Role("TECHNICIAN"));
+        roleRepository.save(new Role("SUPERVISOR"));
+    }
 }
