@@ -44,17 +44,27 @@ public class FileServiceImpl implements  FileService{
         fileDataRepository.deleteFileDataById(fileId);
     }
 
-    private final String  FILE_SYSTEM_PATH= Paths.get("").toAbsolutePath().resolve("src").resolve("main").resolve("resources").resolve("images").toString() + "/";
-
+    private final String FILE_SYSTEM_PATH = "/app/images/";
     @Override
     public FileData processUploadedFile(@NotNull final MultipartFile file) throws IOException {
         var originalFileName = file.getOriginalFilename();
-        var fileName = originalFileName.substring(0, originalFileName.indexOf('.'));
-        var extension = originalFileName.substring(originalFileName.indexOf('.'));
+
+        int dotIndex = originalFileName.lastIndexOf('.');
+        String fileName;
+        String extension;
+
+        if (dotIndex > 0) {
+            fileName = originalFileName.substring(0, dotIndex);
+            extension = originalFileName.substring(dotIndex);
+        } else {
+            fileName = originalFileName;
+            extension = "";
+        }
+
         var filePath = FILE_SYSTEM_PATH + fileName + UUID.randomUUID() + extension;
 
         FileData fileData = FileData.builder()
-                .name(file.getOriginalFilename())
+                .name(originalFileName)
                 .type(file.getContentType())
                 .filePath(filePath)
                 .build();
