@@ -50,7 +50,7 @@ public class UserEntity implements UserDetails {
     @Column( name = "is_enabled", nullable = false)
     private boolean isEnabled;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
