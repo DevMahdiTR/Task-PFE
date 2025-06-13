@@ -1,3 +1,4 @@
+
 spring:
   mail:
     host: smtp.gmail.com
@@ -25,3 +26,6 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8081
+
